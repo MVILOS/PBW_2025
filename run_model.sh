@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 # --- Simulation Parameter Definition ---
 # Change these values to run the simulation with different parameters.
@@ -26,19 +28,15 @@ OUTPUT_DIR="outputs"
 
 
 # 1. Compile the C++ program
-#echo "Compiling $CPP_SOURCE..."
-#g++ -std=c++17 -O3 -o $EXECUTABLE $CPP_SOURCE
+echo "Compiling $CPP_SOURCE..."
+g++ -std=c++17 -O3 -Wall -Wextra -o "$EXECUTABLE" "$CPP_SOURCE"
 
 # Check if the compilation was successful
-if [ $? -ne 0 ]; then
-    echo "Compilation failed. Aborting script."
-    exit 1
-fi
 echo "Compilation successful."
 
 
 # 2. Create the output directory if it doesn't exist
-mkdir -p $OUTPUT_DIR
+mkdir -p "$OUTPUT_DIR"
 echo "Output directory: '$OUTPUT_DIR'."
 
 
@@ -49,12 +47,9 @@ echo "Output file: $FILENAME"
 
 # 4. Run the simulation with the defined parameters
 echo "Running simulation for model: $MODEL_TYPE..."
-./$EXECUTABLE "$MODEL_TYPE" "$TMAX" "$NTOT" "$S" "$D" "$L" "$P" "$FILENAME"
+./"$EXECUTABLE" "$MODEL_TYPE" "$TMAX" "$NTOT" "$S" "$D" "$L" "$P" "$FILENAME"
 
 # Check if the program finished correctly
-if [ $? -ne 0 ]; then
-    echo "An error occurred during the simulation."
-    exit 1
-fi
+:
 
 echo "Script finished."

@@ -95,14 +95,14 @@ int main(int argc, char* argv[]) {
         double total_division_propensity = 0.0;
 
         // Iterate over all clones to calculate their division propensity.
-        for (int i = 0; i < clones.size(); ++i) {
+        for (std::size_t i = 0; i < clones.size(); ++i) {
             if (clones[i].n > 0) { // Only consider clones with at least one cell.
                 // Fitness is calculated based on driver (s) and passenger (d) mutations.
                 double fitness = std::pow(1.0 + s, clones[i].k) * std::pow(1.0 - d, clones[i].l);
                 // Propensity is the fitness of the clone multiplied by its population size.
                 double propensity = clones[i].n * fitness;
                 propensities.push_back(propensity);
-                active_clone_indices.push_back(i);
+                active_clone_indices.push_back(static_cast<int>(i));
                 total_division_propensity += propensity;
             }
         }
@@ -129,10 +129,10 @@ int main(int argc, char* argv[]) {
             double cumulative_prop_repro = 0.0;
             int reproducing_clone_idx = -1;
             // Roulette wheel selection based on propensities.
-            for (int i = 0; i < propensities.size(); ++i) {
+            for (std::size_t i = 0; i < propensities.size(); ++i) {
                 cumulative_prop_repro += propensities[i];
                 if (r_repro < cumulative_prop_repro) {
-                    reproducing_clone_idx = active_clone_indices[i];
+                    reproducing_clone_idx = active_clone_indices[static_cast<int>(i)];
                     break;
                 }
             }
@@ -143,10 +143,10 @@ int main(int argc, char* argv[]) {
                 // Model A: death is also fitness-dependent (proportional to propensity).
                 double r_death = unif_dist(rng) * total_division_propensity;
                 double cumulative_prop_death = 0.0;
-                for (int i = 0; i < propensities.size(); ++i) {
+                for (std::size_t i = 0; i < propensities.size(); ++i) {
                     cumulative_prop_death += propensities[i];
                     if (r_death < cumulative_prop_death) {
-                        dying_clone_idx = active_clone_indices[i];
+                        dying_clone_idx = active_clone_indices[static_cast<int>(i)];
                         break;
                     }
                 }
@@ -156,11 +156,11 @@ int main(int argc, char* argv[]) {
                 int random_cell_pos = cell_dist(rng);
                 int cumulative_n = 0;
                 // Iterate through all clones to find which one contains the chosen cell.
-                for (int i = 0; i < clones.size(); ++i) { 
+                for (std::size_t i = 0; i < clones.size(); ++i) { 
                     if (clones[i].n > 0) {
                          cumulative_n += clones[i].n;
                          if (random_cell_pos <= cumulative_n) {
-                             dying_clone_idx = i;
+                             dying_clone_idx = static_cast<int>(i);
                              break;
                          }
                     }
@@ -182,10 +182,10 @@ int main(int argc, char* argv[]) {
             int parent_clone_idx = -1;
             
             // Find the clone to which the selected cell belongs.
-            for(int i = 0; i < clones.size(); ++i) {
+            for(std::size_t i = 0; i < clones.size(); ++i) {
                 cumulative_n += clones[i].n;
                 if (random_cell_pos <= cumulative_n) {
-                    parent_clone_idx = i;
+                    parent_clone_idx = static_cast<int>(i);
                     break;
                 }
             }
