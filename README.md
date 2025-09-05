@@ -5,7 +5,7 @@ This project contains an implementation of a simple Moran process with driver an
 ## Requirements
 
 - A C++ compiler with C++17 support (e.g., `g++`)
-- Bash (to run the `run_model.sh` script)
+- Bash (to run the `run_model.sh` script !!! chmod +x !!!)
 - Python 3 and the following packages: `pandas`, `matplotlib`
 
 Installing Python packages:
